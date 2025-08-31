@@ -82,33 +82,42 @@ def main():
         return
     
     # Initialize searcher
-    try:
-        searcher = QuoteSearcher("quotes.json")
-        print("Quote search initialized successfully!")
-        print("Type 'exit' to quit.\n")
-        
-        # Interactive search loop
-        while True:
-            query = input("Enter your search query: ").strip()
-            if query.lower() == 'exit':
+    searcher = QuoteSearcher("quotes.json")
+    print("Quote search initialized successfully!")
+    print("Type 'exit' to quit.\n")
+    
+    # Interactive search loop
+    print("\nEnter your search query (or type 'exit', 'quit', 'q' to quit):")
+    while True:
+        try:
+            query = input("\nSearch: ").strip()
+            
+            # Check for exit commands
+            if query.lower() in ['exit', 'quit', 'q']:
+                print("\nExiting quote search. Goodbye!")
                 break
                 
             if not query:
+                print("Please enter a search query or type 'exit' to quit.")
                 continue
-                
+            
             results = searcher.search_quotes(query)
             
             if not results:
                 print("No matching quotes found.\n")
                 continue
                 
-            print("\nTop matching quotes:")
+            print("\nTop matching quotes (type 'exit' to quit):")
             for i, result in enumerate(results, 1):
-                print(f"{i}. {result['quote']} (Relevance: {1 - result['score']/2:.1%})")
-            print()  # Add a newline
+                print(f"{i}. {result['quote']} (Relevance: {1 - result['score']/2:.1%}")
+            print("\n" + "-"*80)  # Add a separator line
             
-    except Exception as e:
-        print(f"An error occurred: {str(e)}")
+        except KeyboardInterrupt:
+            print("\n\nExiting quote search. Goodbye!")
+            break
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+            continue
 
 if __name__ == "__main__":
     main()
